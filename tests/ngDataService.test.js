@@ -211,7 +211,7 @@ describe('ngDataService', function() {
       spyOn($windowMock.localStorage, 'removeItem');
     });
 
-    it('should remove a single item cached item', function() {
+    it('should remove a single cached item', function() {
       service.remove(validUrl);
       expect($windowMock.localStorage.removeItem)
         .toHaveBeenCalledWith(CACHE_PREFIX + validUrl);
