@@ -20,19 +20,24 @@
   function validateUrl(url) {
     if(!VALID_URL_REGEIX.test(url)) {
       var callee = arguments.callee.caller.toString();
-      throw 'ngDataService' + callee + '(url) - provided url is invalid';
+      var errorMessage = 'ngDataService.' + callee + '(url)' +
+        + 'invalid url "' + url + '"';
+
+      throw errorMessage;
     }
   }
 
   function onRequestSuccess(url, value) {
     delete runningQueries[url];
     this.storage.setItem(CACHE_PREFIX + url, JSON.stringify(value));
+
     return value;
   }
 
   function onRequestError(url, error, status) {
     delete runningQueries[url];
     console.error('HTTP GET [' + url + '] failed with status code ' + status);
+
     return error;
   }
 
@@ -49,11 +54,11 @@
     var cached = this.storage.getItem(CACHE_PREFIX + url);
     if(cached) {
       var deferred = this.$q.defer();
-      var resolution = {
+      var value = {
         data: JSON.parse(cached)
       };
 
-      deferred.resolve(resolution);
+      deferred.resolve(value);
       return deferred.promise;
     }
 
@@ -68,6 +73,7 @@
         .get(url)
         .success(onRequestSuccess.bind(this, url))
         .error(onRequestError.bind(this, url));
+
     }
 
     return runningQueries[url];

@@ -185,15 +185,19 @@ describe('ngDataService', function() {
       $root.$digest();
     });
 
-    it('should always check the storage for cache and return if found', function() {
-      service.get(validUrl);
-      service.get(validUrl);
+    describe('when there is cache', function() {
+      beforeEach(function() {
+        service.get(validUrl);
+        service.get(validUrl);
+      });
 
-      expect(service.getLive).not.toHaveBeenCalled();
-      expect($windowMock.localStorage.getItem)
-        .toHaveBeenCalledWith(CACHE_PREFIX + validUrl);
+      it('should always return cache and not call getLive()', function() {
+        expect(service.getLive).not.toHaveBeenCalled();
+        expect($windowMock.localStorage.getItem)
+          .toHaveBeenCalledWith(CACHE_PREFIX + validUrl);
 
-      expect($windowMock.localStorage.getItem.calls.count()).toBe(2);
+        expect($windowMock.localStorage.getItem.calls.count()).toBe(2);
+      });
     });
 
     describe('when the cache is empty', function() {
@@ -204,7 +208,7 @@ describe('ngDataService', function() {
         service.get(validUrl);
       });
 
-      it('getLive(validUrl) should be called', function() {
+      it('getLive() should be called once', function() {
         expect($windowMock.localStorage.getItem)
           .toHaveBeenCalledWith(CACHE_PREFIX + validUrl);
         expect(service.getLive).toHaveBeenCalledWith(validUrl);
@@ -213,7 +217,7 @@ describe('ngDataService', function() {
         expect(service.getLive.calls.count()).toBe(1);
       });
 
-      describe('get(validUrl) is called again after cache', function() {
+      describe('get() is called again after caching', function() {
         beforeEach(function() {
           $windowMock.localStorage.getItem
             .and.returnValue(responseMockStringified);
@@ -221,7 +225,7 @@ describe('ngDataService', function() {
           service.get(validUrl);
         });
 
-        it('getLive(validUrl) should not be called twice', function() {
+        it('getLive() should not be called twice', function() {
           expect($windowMock.localStorage.getItem.calls.count()).toBe(2);
           expect(service.getLive.calls.count()).toBe(1);
         });
@@ -233,10 +237,11 @@ describe('ngDataService', function() {
   describe('remove(validUrl)', function() {
     beforeEach(function() {
       spyOn($windowMock.localStorage, 'removeItem');
+      service.remove(validUrl);
     });
 
-    it('should remove a single cached item', function() {
-      service.remove(validUrl);
+    it('should call localStorage.removeItem() once', function() {
+      expect($windowMock.localStorage.removeItem.calls.count()).toBe(1);
       expect($windowMock.localStorage.removeItem)
         .toHaveBeenCalledWith(CACHE_PREFIX + validUrl);
     });
@@ -245,11 +250,10 @@ describe('ngDataService', function() {
   describe('removeAll()', function() {
     beforeEach(function() {
       spyOn($windowMock.localStorage, 'removeItem');
+      service.removeAll();
     });
 
     it('should remove all elements that have a valid key-name format', function() {
-      service.removeAll();
-
       expect($windowMock.localStorage.removeItem.calls.count()).toBe(2);
       expect($windowMock.localStorage.removeItem).toHaveBeenCalledWith('lsc_/');
       expect($windowMock.localStorage.removeItem).toHaveBeenCalledWith('lsc_http://test');
