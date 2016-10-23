@@ -253,7 +253,7 @@ describe('ngDataService', function() {
       service.removeAll();
     });
 
-    it('should remove all elements that have a valid key-name format', function() {
+    it('should remove only elements with validly-formatted keys from localStorage', function() {
       expect($windowMock.localStorage.removeItem.calls.count()).toBe(2);
       expect($windowMock.localStorage.removeItem).toHaveBeenCalledWith('lsc_/');
       expect($windowMock.localStorage.removeItem).toHaveBeenCalledWith('lsc_http://test');
