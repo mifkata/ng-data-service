@@ -1,7 +1,7 @@
 {
   "name": "ng-data-service",
   "version": "0.0.1",
-  "description": "A simple Angular 1.x Service API for XHR get requests with cache functionallity",
+  "description": "A simple Angular 1.x Service API for XHR get requests with cache functionality",
   "scripts": {
     "test": "node_modules/.bin/grunt karma"
   },
