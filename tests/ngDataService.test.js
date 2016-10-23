@@ -44,24 +44,39 @@ describe('ngDataService', function() {
   });
 
   describe('getLive(validUrl)', function() {
-    var $httpBackend, call;
+    var $http, call;
     var validUrl = '/some-test-url';
     var response = { test: 123 };
 
-    beforeEach(inject(function($injector) {
-      $httpBackend = $injector.get('$httpBackend');
-      $httpBackend.when('GET', validUrl).respond(response);
+    beforeEach(inject(function($httpBackend) {
+      $http = $httpBackend
+      call = $http.when('GET', validUrl).respond(response);
     }));
 
     afterEach(function() {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+      $http.flush();
+      $http.verifyNoOutstandingExpectation();
+      $http.verifyNoOutstandingRequest();
     });
 
     it('should make an $http GET call', function() {
-      $httpBackend.expectGET(validUrl);
+      $http.expectGET(validUrl);
       service.getLive(validUrl);
-      $httpBackend.flush();
+    });
+
+    it('should return a promise', function() {
+      var req = service.getLive(validUrl);
+      expect(req).not.toBe(undefined);
+      expect(typeof req.then).toBe('function');
+    });
+
+    it('should be able to catch errors', function(done) {
+      call.respond(401, 'error');
+      $http.expectGET(validUrl);
+      service.getLive(validUrl).catch(function(err) {
+        expect(err).toBe('error');
+        done();
+      });
     });
   });
 });
