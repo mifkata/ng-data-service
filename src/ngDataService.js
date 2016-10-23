@@ -73,7 +73,6 @@
         .get(url)
         .success(onRequestSuccess.bind(this, url))
         .error(onRequestError.bind(this, url));
-
     }
 
     return runningQueries[url];
