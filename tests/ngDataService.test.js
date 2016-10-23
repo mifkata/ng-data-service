@@ -42,4 +42,26 @@ describe('ngDataService', function() {
       });
     });
   });
+
+  describe('getLive(validUrl)', function() {
+    var $httpBackend, call;
+    var validUrl = '/some-test-url';
+    var response = { test: 123 };
+
+    beforeEach(inject(function($injector) {
+      $httpBackend = $injector.get('$httpBackend');
+      $httpBackend.when('GET', validUrl).respond(response);
+    }));
+
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should make an $http GET call', function() {
+      $httpBackend.expectGET(validUrl);
+      service.getLive(validUrl);
+      $httpBackend.flush();
+    });
+  });
 });
