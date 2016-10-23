@@ -13,6 +13,9 @@
   var CACHE_PREFIX = 'lsc_';
   var CACHE_REGEX = /^lsc_((http(s)?\:\/\/)|\/)/;
 
+  // @cache with request promises
+  var runningQueries = {};
+
   // @private
   function validateUrl(url) {
     if(!VALID_URL_REGEIX.test(url)) {
@@ -22,11 +25,13 @@
   }
 
   function onRequestSuccess(url, value) {
+    delete runningQueries[url];
     this.storage.setItem(CACHE_PREFIX + url, JSON.stringify(value));
     return value;
   }
 
   function onRequestError(url, error, status) {
+    delete runningQueries[url];
     console.error('HTTP GET [' + url + '] failed with status code ' + status);
     return error;
   }
@@ -58,10 +63,14 @@
   ngDataService.prototype.getLive = function(url) {
     validateUrl(url);
 
-    return this.$http
-      .get(url)
-      .success(onRequestSuccess.bind(this, url))
-      .error(onRequestError.bind(this, url));
+    if(!runningQueries.hasOwnProperty(url)) {
+      runningQueries[url] = this.$http
+        .get(url)
+        .success(onRequestSuccess.bind(this, url))
+        .error(onRequestError.bind(this, url));
+    }
+
+    return runningQueries[url];
   }
 
   ngDataService.prototype.remove = function(url) {
