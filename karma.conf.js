@@ -8,7 +8,7 @@ module.exports = function(config) {
       'src/*.js',
       'tests/*.js'
     ],
-    reporters: ['progress'],
+    reporters: ['mocha'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

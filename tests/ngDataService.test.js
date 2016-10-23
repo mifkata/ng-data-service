@@ -63,13 +63,13 @@ describe('ngDataService', function() {
 
     ['get', 'getLive', 'remove'].map(function(method) {
       invalidUrl.map(function(url) {
-        it(method + '(url) with invalid url SHOULD throw', function() {
+        it(method + '(' + url + ') with invalid url SHOULD throw', function() {
           expect(service[method].bind(service, url)).toThrow();
         });
       });
 
       validUrl.map(function(url) {
-        it(method + '(url) with valid url SHOULD NOT throw', function() {
+        it(method + '(' + url + ') with valid url SHOULD NOT throw', function() {
           expect(service[method].bind(service, url)).not.toThrow();
         });
       });
