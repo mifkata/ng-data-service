@@ -6,13 +6,15 @@
     "test": "karma start karma.conf.js",
     "test:dev": "npm run test -- --single-run=false"
   },
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/clickbuster/ng-data-service.git"
   },
   "keywords": [
+    "angularjs",
     "angular",
-    "$http.get",
+    "cache",
     "localStorage"
   ],
   "author": "Andriyan Ivanov",
