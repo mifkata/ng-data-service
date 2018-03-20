@@ -1,6 +1,9 @@
-const runningQueries = {};
 const CACHE_PREFIX = 'lsc_';
-const CACHE_REGEX = /^lsc_((http(s)?\:\/\/)|\/)/;
+const CACHE_REGEX = /^lsc_(\/|https?:\/\/)/i;
+const URL_REGEX = /^(\/|https?:\/\/)/i;
+
+// map of ongoing requests
+const runningQueries = {};
 
 class NgDataService {
   constructor($http, $window) {
@@ -9,7 +12,7 @@ class NgDataService {
   };
 
   isValidUrl(url) {
-    return /^((\/)|https?:\/\/)/.test(url);
+    return URL_REGEX.test(url);
   }
 
   get(url) {
@@ -17,7 +20,7 @@ class NgDataService {
       throw new Error(`NgDataService.get(url), invalid url: ${url}`);
     }
 
-    var cached = this.storage.getItem(CACHE_PREFIX + url);
+    const cached = this.storage.getItem(CACHE_PREFIX + url);
     if(cached) {
       return Promise.resolve({ data: JSON.parse(cached) });
     }
@@ -48,7 +51,7 @@ class NgDataService {
   };
 
   removeAll() {
-    for(var item in this.storage) {
+    for(let item in this.storage) {
       if(CACHE_REGEX.test(item)) {
         this.storage.removeItem(item);
       }
