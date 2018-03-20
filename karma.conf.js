@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  config.set({
+  const configuration = {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
@@ -14,6 +14,19 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: true
-  });
+    singleRun: true,
+ 
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    }
+  };
+
+  if(process.env.TRAVIS) {
+    configuration.browsers = ['Chrome_travis_ci'];
+  }
+
+  return config.set(configuration);
 };

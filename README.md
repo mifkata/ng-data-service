@@ -1,4 +1,4 @@
-# ng-data-service
+# ng-data-service [![Build Status](https://travis-ci.org/clickbuster/ng-data-service.svg?branch=master)](https://travis-ci.org/clickbuster/ng-data-service)
 A simple Angular 1.x Service API for XHR get requests with cache functionality
 
 # Install and Test
